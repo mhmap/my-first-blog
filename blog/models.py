@@ -1,6 +1,7 @@
 from django.db import models
 # Create your models here.
 from django.utils import timezone
+from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 
 class Post(models.Model):
     author = models.ForeignKey('auth.User')
@@ -34,3 +35,9 @@ class Comment(models.Model):
 
 def approved_comments(self):
     return self.comments.filter(approved_comment=True)
+
+    
+#####
+####
+##
+#    Registration

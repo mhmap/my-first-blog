@@ -1,8 +1,13 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.utils import timezone
+from django.shortcuts import render, get_object_or_404, redirect, render_to_response
 from .models import Post, Comment
-from .forms import PostForm, CommentForm
+from .forms import PostForm, CommentForm, MyRegistrationForm
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from django.contrib import auth
+from django.template.context_processors import csrf
+from django.utils import timezone
+
+
 
 def post_list(request):
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
@@ -84,3 +89,45 @@ def comment_remove(request, pk):
     post_pk = comment.post.pk
     comment.delete()
     return redirect('blog.views.post_detail', pk=post_pk)
+
+#### Registration
+#
+#
+"""
+def login(request):
+    c={}
+    c.update(csrf(request))
+    return render_to_response('login.html')
+
+def auth_view(request):
+    username=request.POST.get('username','')
+    password=request.POST.get('password','')
+    user.auth.authenticate(username=username, password=password)
+
+    if user is not None:
+        auth.login(request, user)
+        return HttpResponseRedirect('/accounts/loggedin')
+    else:
+        HttpResponseRedirect('/accounts/invalid')
+
+def loggedin(request):
+    return render_to_response('loggedin.html',{'full_name':request.user.username})
+
+
+def logout(request):
+    auth.logout(request)
+    return render_to_response('logout.html')
+
+def register_user(request):
+    if request.method == 'POST':
+        form = MyRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect('/accounts/register_success')
+    args={}
+    args.update(csrf(request))
+    args['form']=MyRegistrationForm()
+    return render_to_response('register.html',args)
+
+def register_sucess(request):
+    return render_to_response('register_success.html')"""
